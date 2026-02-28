@@ -1,13 +1,20 @@
 # syntax=docker/dockerfile:1
 
 # ── Stage 1: Build ────────────────────────────────────────────
+
+# ── Stage 1: Build ────────────────────────────────────────────
 FROM alpine:3.23 AS builder
 
+# Alpine 3.23 hiện tại cung cấp Zig 0.15.2-r0, khớp với yêu cầu project
 RUN apk add --no-cache zig musl-dev
 
 WORKDIR /app
-COPY build.zig build.zig.zon ./
-COPY src/ src/
+
+# Thay vì copy từng file, hãy copy toàn bộ thư mục hiện tại
+# Điều này đảm bảo thư mục vendor/ và các tài nguyên khác được đưa vào
+COPY . .
+
+# Tiến hành build
 RUN zig build -Doptimize=ReleaseSmall
 
 # ── Stage 2: Config Prep ─────────────────────────────────────
