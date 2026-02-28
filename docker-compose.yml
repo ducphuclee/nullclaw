@@ -4,8 +4,8 @@ services:
     #image: nullclaw:latest
     # Bỏ profiles nếu bạn muốn 'docker compose up' là chạy luôn
     # profiles: ["gateway"] 
-    ports:
-      - "3000:3000" # Map đúng port 3000 từ Dockerfile
+    expose:
+      - "3000" # Map đúng port 3000 từ Dockerfile
     env_file:
       - path: .env
         required: false
