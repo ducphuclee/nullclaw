@@ -4,14 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile
       target: release
-    image: nullclaw:latest
+    # Không có image directive
     ports:
       - "8080:3000"
     env_file:
       - path: .env
         required: false
-    # volumes:  # Comment lại để disable mount
-    #   - nullclaw-data:/nullclaw-data
     command: ["gateway", "--port", "3000", "--host", "::"]
     restart: unless-stopped
     healthcheck:
@@ -21,20 +19,15 @@ services:
       retries: 3
 
   agent:
-    build:
+    build: 
       context: .
       dockerfile: Dockerfile
       target: release
-    image: nullclaw:latest
+    # Không có image directive
     stdin_open: true
     tty: true
     env_file:
       - path: .env
         required: false
-    # volumes:  # Comment lại
-    #   - nullclaw-data:/nullclaw-data
     command: ["agent"]
     restart: unless-stopped
-
-# volumes:  # Có thể comment hoặc giữ nguyên cũng được
-#   nullclaw-data:
