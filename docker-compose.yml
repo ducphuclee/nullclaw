@@ -1,7 +1,7 @@
 services:
   gateway:
     build: .
-    image: nullclaw:latest
+    #image: nullclaw:latest
     # Bỏ profiles nếu bạn muốn 'docker compose up' là chạy luôn
     # profiles: ["gateway"] 
     ports:
@@ -22,7 +22,7 @@ services:
 
   agent:
     build: .
-    image: nullclaw:latest
+    #image: nullclaw:latest
     profiles: ["agent"] # Agent thường dùng tương tác trực tiếp, nên để profile là hợp lý
     stdin_open: true
     tty: true
