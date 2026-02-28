@@ -1,33 +1,34 @@
 services:
   gateway:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-      target: release
-    # Không có image directive
+    build: .
+    image: nullclaw:latest
+    # Bỏ profiles nếu bạn muốn 'docker compose up' là chạy luôn
+    # profiles: ["gateway"] 
     ports:
-      - "8080:3000"
+      - "3000:3000" # Map đúng port 3000 từ Dockerfile
     env_file:
       - path: .env
         required: false
-    command: ["gateway", "--port", "3000", "--host", "::"]
+    #volumes:
+      # Sửa lại đường dẫn khớp với ENV HOME trong Dockerfile
+      #- nullclaw-data:/nullclaw-data 
     restart: unless-stopped
     healthcheck:
+      # Sửa port healthcheck về 3000
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
       timeout: 5s
       retries: 3
 
   agent:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-      target: release
-    # Không có image directive
+    build: .
+    image: nullclaw:latest
+    profiles: ["agent"] # Agent thường dùng tương tác trực tiếp, nên để profile là hợp lý
     stdin_open: true
     tty: true
-    env_file:
-      - path: .env
-        required: false
-    command: ["agent"]
-    restart: unless-stopped
+    #volumes:
+      #- nullclaw-data:/nullclaw-data
+    entrypoint: ["nullclaw", "agent"] # Chạy chế độ chat trực tiếp
+
+#volumes:
+  #nullclaw-data:
