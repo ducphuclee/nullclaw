@@ -22,16 +22,29 @@ FROM busybox:1.37 AS config
 
 RUN mkdir -p /nullclaw-data/.nullclaw /nullclaw-data/workspace
 
+# Tạo file config.json theo cấu trúc chuẩn v2026 (Nested JSON)
 RUN cat > /nullclaw-data/.nullclaw/config.json << 'EOF'
 {
-  "api_key": "",
-  "default_provider": "openrouter",
-  "default_model": "anthropic/claude-sonnet-4",
-  "default_temperature": 0.7,
+  "models": {
+    "providers": {
+      "openrouter": { 
+        "api_key": "" 
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": { 
+        "primary": "openrouter/openai/gpt-5-nano" 
+      },
+      "temperature": 0.7
+    }
+  },
   "gateway": {
     "port": 3000,
     "host": "::",
-    "allow_public_bind": true
+    "allow_public_bind": true,
+    "require_pairing": false
   }
 }
 EOF
