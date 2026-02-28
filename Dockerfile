@@ -9,7 +9,11 @@ WORKDIR /app
 COPY build.zig build.zig.zon ./
 COPY src/ src/
 
-COPY vendor/ vendor/  # Thêm dòng này
+RUN mkdir -p vendor/sqlite3 && \
+    wget -q https://raw.githubusercontent.com/sqlite/sqlite3/master/sqlite3.c -O vendor/sqlite3/sqlite3.c && \
+    wget -q https://raw.githubusercontent.com/sqlite/sqlite3/master/sqlite3.h -O vendor/sqlite3/sqlite3.h && \
+    wget -q https://raw.githubusercontent.com/sqlite/sqlite3/master/sqlite3ext.h -O vendor/sqlite3/sqlite3ext.h
+    
 RUN zig build -Doptimize=ReleaseSmall
 
 # ── Stage 2: Config Prep ─────────────────────────────────────
