@@ -8,21 +8,21 @@ services:
     env_file:
       - path: .env
         required: false
-    volumes:
-      - nullclaw-data:/root/.nullclaw
+    #volumes:
+     # - nullclaw-data:/root/.nullclaw
     restart: unless-stopped
 
   gateway:
     build: .
     image: nullclaw:latest
     profiles: ["gateway"]
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     env_file:
       - path: .env
         required: false
-    volumes:
-      - nullclaw-data:/root/.nullclaw
+    #volumes:
+    #  - nullclaw-data:/root/.nullclaw
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
@@ -30,5 +30,5 @@ services:
       timeout: 5s
       retries: 3
 
-volumes:
-  nullclaw-data:
+#volumes:
+  #nullclaw-data:
