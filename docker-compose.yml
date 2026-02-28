@@ -1,34 +1,40 @@
 services:
-  agent:
-    build: .
+  gateway:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: release
     image: nullclaw:latest
-    profiles: ["agent"]
+    ports:
+      - "8080:3000"
+    env_file:
+      - path: .env
+        required: false
+    # volumes:  # Comment lại để disable mount
+    #   - nullclaw-data:/nullclaw-data
+    command: ["gateway", "--port", "3000", "--host", "::"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: release
+    image: nullclaw:latest
     stdin_open: true
     tty: true
     env_file:
       - path: .env
         required: false
-    #volumes:
-     # - nullclaw-data:/root/.nullclaw
+    # volumes:  # Comment lại
+    #   - nullclaw-data:/nullclaw-data
+    command: ["agent"]
     restart: unless-stopped
 
-  gateway:
-    build: .
-    image: nullclaw:latest
-    #profiles: ["gateway"]
-    expose:
-      - "8080"
-    env_file:
-      - path: .env
-        required: false
-    #volumes:
-    #  - nullclaw-data:/root/.nullclaw
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-
-#volumes:
-  #nullclaw-data:
+# volumes:  # Có thể comment hoặc giữ nguyên cũng được
+#   nullclaw-data:
