@@ -9,6 +9,14 @@ WORKDIR /app
 COPY build.zig build.zig.zon ./
 COPY src/ src/
 
+# Clone sqlite3 nếu chưa có
+RUN if [ ! -d "vendor/sqlite3" ]; then \
+    mkdir -p vendor && \
+    git clone https://github.com/sqlite/sqlite3.git vendor/sqlite3; \
+    fi
+
+#RUN zig build -Doptimize=ReleaseSmall
+
 RUN zig build -Doptimize=ReleaseSmall
 
 # ── Stage 2: Config Prep ─────────────────────────────────────
